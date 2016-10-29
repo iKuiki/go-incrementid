@@ -9,10 +9,10 @@ It is generated from these files:
 	incrementid.proto
 
 It has these top-level messages:
-	GetIncrIdRequest
-	GetIncrIdReply
-	CheckIncrKeyExistReply
-	CreateIncrKeyRequest
+	IncrIdNameRequest
+	IncrIdReply
+	IncrBoolReply
+	IncrIdNameValueRequest
 	NoneReply
 */
 package increment
@@ -37,42 +37,42 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-type GetIncrIdRequest struct {
+type IncrIdNameRequest struct {
 	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 }
 
-func (m *GetIncrIdRequest) Reset()                    { *m = GetIncrIdRequest{} }
-func (m *GetIncrIdRequest) String() string            { return proto.CompactTextString(m) }
-func (*GetIncrIdRequest) ProtoMessage()               {}
-func (*GetIncrIdRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (m *IncrIdNameRequest) Reset()                    { *m = IncrIdNameRequest{} }
+func (m *IncrIdNameRequest) String() string            { return proto.CompactTextString(m) }
+func (*IncrIdNameRequest) ProtoMessage()               {}
+func (*IncrIdNameRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
-type GetIncrIdReply struct {
-	IncId uint64 `protobuf:"varint,1,opt,name=inc_id,json=incId" json:"inc_id,omitempty"`
+type IncrIdReply struct {
+	Id uint64 `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
 }
 
-func (m *GetIncrIdReply) Reset()                    { *m = GetIncrIdReply{} }
-func (m *GetIncrIdReply) String() string            { return proto.CompactTextString(m) }
-func (*GetIncrIdReply) ProtoMessage()               {}
-func (*GetIncrIdReply) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (m *IncrIdReply) Reset()                    { *m = IncrIdReply{} }
+func (m *IncrIdReply) String() string            { return proto.CompactTextString(m) }
+func (*IncrIdReply) ProtoMessage()               {}
+func (*IncrIdReply) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
-type CheckIncrKeyExistReply struct {
-	Exist bool `protobuf:"varint,1,opt,name=exist" json:"exist,omitempty"`
+type IncrBoolReply struct {
+	Ret bool `protobuf:"varint,1,opt,name=ret" json:"ret,omitempty"`
 }
 
-func (m *CheckIncrKeyExistReply) Reset()                    { *m = CheckIncrKeyExistReply{} }
-func (m *CheckIncrKeyExistReply) String() string            { return proto.CompactTextString(m) }
-func (*CheckIncrKeyExistReply) ProtoMessage()               {}
-func (*CheckIncrKeyExistReply) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+func (m *IncrBoolReply) Reset()                    { *m = IncrBoolReply{} }
+func (m *IncrBoolReply) String() string            { return proto.CompactTextString(m) }
+func (*IncrBoolReply) ProtoMessage()               {}
+func (*IncrBoolReply) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
-type CreateIncrKeyRequest struct {
-	Name         string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
-	InitialValue uint64 `protobuf:"varint,2,opt,name=initial_value,json=initialValue" json:"initial_value,omitempty"`
+type IncrIdNameValueRequest struct {
+	Name  string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Value uint64 `protobuf:"varint,2,opt,name=value" json:"value,omitempty"`
 }
 
-func (m *CreateIncrKeyRequest) Reset()                    { *m = CreateIncrKeyRequest{} }
-func (m *CreateIncrKeyRequest) String() string            { return proto.CompactTextString(m) }
-func (*CreateIncrKeyRequest) ProtoMessage()               {}
-func (*CreateIncrKeyRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+func (m *IncrIdNameValueRequest) Reset()                    { *m = IncrIdNameValueRequest{} }
+func (m *IncrIdNameValueRequest) String() string            { return proto.CompactTextString(m) }
+func (*IncrIdNameValueRequest) ProtoMessage()               {}
+func (*IncrIdNameValueRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
 type NoneReply struct {
 }
@@ -83,10 +83,10 @@ func (*NoneReply) ProtoMessage()               {}
 func (*NoneReply) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
 
 func init() {
-	proto.RegisterType((*GetIncrIdRequest)(nil), "increment.GetIncrIdRequest")
-	proto.RegisterType((*GetIncrIdReply)(nil), "increment.GetIncrIdReply")
-	proto.RegisterType((*CheckIncrKeyExistReply)(nil), "increment.CheckIncrKeyExistReply")
-	proto.RegisterType((*CreateIncrKeyRequest)(nil), "increment.CreateIncrKeyRequest")
+	proto.RegisterType((*IncrIdNameRequest)(nil), "increment.IncrIdNameRequest")
+	proto.RegisterType((*IncrIdReply)(nil), "increment.IncrIdReply")
+	proto.RegisterType((*IncrBoolReply)(nil), "increment.IncrBoolReply")
+	proto.RegisterType((*IncrIdNameValueRequest)(nil), "increment.IncrIdNameValueRequest")
 	proto.RegisterType((*NoneReply)(nil), "increment.NoneReply")
 }
 
@@ -101,9 +101,10 @@ const _ = grpc.SupportPackageIsVersion3
 // Client API for IncrementId service
 
 type IncrementIdClient interface {
-	GetIncrId(ctx context.Context, in *GetIncrIdRequest, opts ...grpc.CallOption) (*GetIncrIdReply, error)
-	CheckIncrKeyExist(ctx context.Context, in *GetIncrIdRequest, opts ...grpc.CallOption) (*CheckIncrKeyExistReply, error)
-	CreateIncrKey(ctx context.Context, in *CreateIncrKeyRequest, opts ...grpc.CallOption) (*NoneReply, error)
+	GetIncrId(ctx context.Context, in *IncrIdNameRequest, opts ...grpc.CallOption) (*IncrIdReply, error)
+	GetIncrIdByAmount(ctx context.Context, in *IncrIdNameValueRequest, opts ...grpc.CallOption) (*IncrIdReply, error)
+	CheckIncrKeyExist(ctx context.Context, in *IncrIdNameRequest, opts ...grpc.CallOption) (*IncrBoolReply, error)
+	CreateIncrKey(ctx context.Context, in *IncrIdNameValueRequest, opts ...grpc.CallOption) (*NoneReply, error)
 }
 
 type incrementIdClient struct {
@@ -114,8 +115,8 @@ func NewIncrementIdClient(cc *grpc.ClientConn) IncrementIdClient {
 	return &incrementIdClient{cc}
 }
 
-func (c *incrementIdClient) GetIncrId(ctx context.Context, in *GetIncrIdRequest, opts ...grpc.CallOption) (*GetIncrIdReply, error) {
-	out := new(GetIncrIdReply)
+func (c *incrementIdClient) GetIncrId(ctx context.Context, in *IncrIdNameRequest, opts ...grpc.CallOption) (*IncrIdReply, error) {
+	out := new(IncrIdReply)
 	err := grpc.Invoke(ctx, "/increment.IncrementId/GetIncrId", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
@@ -123,8 +124,17 @@ func (c *incrementIdClient) GetIncrId(ctx context.Context, in *GetIncrIdRequest,
 	return out, nil
 }
 
-func (c *incrementIdClient) CheckIncrKeyExist(ctx context.Context, in *GetIncrIdRequest, opts ...grpc.CallOption) (*CheckIncrKeyExistReply, error) {
-	out := new(CheckIncrKeyExistReply)
+func (c *incrementIdClient) GetIncrIdByAmount(ctx context.Context, in *IncrIdNameValueRequest, opts ...grpc.CallOption) (*IncrIdReply, error) {
+	out := new(IncrIdReply)
+	err := grpc.Invoke(ctx, "/increment.IncrementId/GetIncrIdByAmount", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *incrementIdClient) CheckIncrKeyExist(ctx context.Context, in *IncrIdNameRequest, opts ...grpc.CallOption) (*IncrBoolReply, error) {
+	out := new(IncrBoolReply)
 	err := grpc.Invoke(ctx, "/increment.IncrementId/CheckIncrKeyExist", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
@@ -132,7 +142,7 @@ func (c *incrementIdClient) CheckIncrKeyExist(ctx context.Context, in *GetIncrId
 	return out, nil
 }
 
-func (c *incrementIdClient) CreateIncrKey(ctx context.Context, in *CreateIncrKeyRequest, opts ...grpc.CallOption) (*NoneReply, error) {
+func (c *incrementIdClient) CreateIncrKey(ctx context.Context, in *IncrIdNameValueRequest, opts ...grpc.CallOption) (*NoneReply, error) {
 	out := new(NoneReply)
 	err := grpc.Invoke(ctx, "/increment.IncrementId/CreateIncrKey", in, out, c.cc, opts...)
 	if err != nil {
@@ -144,9 +154,10 @@ func (c *incrementIdClient) CreateIncrKey(ctx context.Context, in *CreateIncrKey
 // Server API for IncrementId service
 
 type IncrementIdServer interface {
-	GetIncrId(context.Context, *GetIncrIdRequest) (*GetIncrIdReply, error)
-	CheckIncrKeyExist(context.Context, *GetIncrIdRequest) (*CheckIncrKeyExistReply, error)
-	CreateIncrKey(context.Context, *CreateIncrKeyRequest) (*NoneReply, error)
+	GetIncrId(context.Context, *IncrIdNameRequest) (*IncrIdReply, error)
+	GetIncrIdByAmount(context.Context, *IncrIdNameValueRequest) (*IncrIdReply, error)
+	CheckIncrKeyExist(context.Context, *IncrIdNameRequest) (*IncrBoolReply, error)
+	CreateIncrKey(context.Context, *IncrIdNameValueRequest) (*NoneReply, error)
 }
 
 func RegisterIncrementIdServer(s *grpc.Server, srv IncrementIdServer) {
@@ -154,7 +165,7 @@ func RegisterIncrementIdServer(s *grpc.Server, srv IncrementIdServer) {
 }
 
 func _IncrementId_GetIncrId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetIncrIdRequest)
+	in := new(IncrIdNameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -166,13 +177,31 @@ func _IncrementId_GetIncrId_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/increment.IncrementId/GetIncrId",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IncrementIdServer).GetIncrId(ctx, req.(*GetIncrIdRequest))
+		return srv.(IncrementIdServer).GetIncrId(ctx, req.(*IncrIdNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IncrementId_GetIncrIdByAmount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IncrIdNameValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IncrementIdServer).GetIncrIdByAmount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/increment.IncrementId/GetIncrIdByAmount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IncrementIdServer).GetIncrIdByAmount(ctx, req.(*IncrIdNameValueRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _IncrementId_CheckIncrKeyExist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetIncrIdRequest)
+	in := new(IncrIdNameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -184,13 +213,13 @@ func _IncrementId_CheckIncrKeyExist_Handler(srv interface{}, ctx context.Context
 		FullMethod: "/increment.IncrementId/CheckIncrKeyExist",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IncrementIdServer).CheckIncrKeyExist(ctx, req.(*GetIncrIdRequest))
+		return srv.(IncrementIdServer).CheckIncrKeyExist(ctx, req.(*IncrIdNameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _IncrementId_CreateIncrKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateIncrKeyRequest)
+	in := new(IncrIdNameValueRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -202,7 +231,7 @@ func _IncrementId_CreateIncrKey_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: "/increment.IncrementId/CreateIncrKey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IncrementIdServer).CreateIncrKey(ctx, req.(*CreateIncrKeyRequest))
+		return srv.(IncrementIdServer).CreateIncrKey(ctx, req.(*IncrIdNameValueRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -214,6 +243,10 @@ var _IncrementId_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetIncrId",
 			Handler:    _IncrementId_GetIncrId_Handler,
+		},
+		{
+			MethodName: "GetIncrIdByAmount",
+			Handler:    _IncrementId_GetIncrIdByAmount_Handler,
 		},
 		{
 			MethodName: "CheckIncrKeyExist",
@@ -231,22 +264,23 @@ var _IncrementId_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("incrementid.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 271 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x7c, 0x91, 0x41, 0x4b, 0xc3, 0x40,
-	0x10, 0x85, 0x13, 0x69, 0x8b, 0x99, 0x5a, 0xb1, 0x43, 0x94, 0x5a, 0x0f, 0xea, 0x0a, 0xea, 0x29,
-	0x07, 0xfd, 0x09, 0xa5, 0xe8, 0x22, 0x28, 0x04, 0xf4, 0x5a, 0xe2, 0xee, 0x80, 0x83, 0xe9, 0x26,
-	0xa6, 0x5b, 0x31, 0x3f, 0xdc, 0xbb, 0x64, 0x5b, 0x43, 0xb4, 0xa1, 0xb7, 0x9d, 0x99, 0xf7, 0x76,
-	0xf6, 0x7d, 0x0b, 0x43, 0x36, 0xaa, 0xa0, 0x39, 0x19, 0xcb, 0x3a, 0xca, 0x8b, 0xcc, 0x66, 0x18,
-	0xd4, 0x2d, 0x71, 0x09, 0x07, 0x77, 0x64, 0xa5, 0x51, 0x85, 0xd4, 0x31, 0x7d, 0x2c, 0x69, 0x61,
-	0x11, 0xa1, 0x63, 0x92, 0x39, 0x8d, 0xfc, 0x33, 0xff, 0x3a, 0x88, 0xdd, 0x59, 0x5c, 0xc1, 0x7e,
-	0x43, 0x97, 0xa7, 0x25, 0x1e, 0x42, 0x8f, 0x8d, 0x9a, 0xb1, 0x76, 0xba, 0x4e, 0xdc, 0x65, 0xa3,
-	0xa4, 0x16, 0x11, 0x1c, 0x4d, 0xde, 0x48, 0xbd, 0x57, 0xd2, 0x07, 0x2a, 0xa7, 0x5f, 0xbc, 0xb0,
-	0x2b, 0x43, 0x08, 0x5d, 0xaa, 0x2a, 0xa7, 0xdf, 0x8d, 0x57, 0x85, 0x78, 0x82, 0x70, 0x52, 0x50,
-	0x62, 0x69, 0x6d, 0xd8, 0xf2, 0x08, 0xbc, 0x80, 0x01, 0x1b, 0xb6, 0x9c, 0xa4, 0xb3, 0xcf, 0x24,
-	0x5d, 0xd2, 0x68, 0xc7, 0x6d, 0xde, 0x5b, 0x37, 0x5f, 0xaa, 0x9e, 0xe8, 0x43, 0xf0, 0x98, 0x19,
-	0x72, 0x3b, 0x6f, 0xbe, 0x7d, 0xe8, 0xcb, 0xdf, 0xb0, 0x52, 0xe3, 0x14, 0x82, 0x3a, 0x06, 0x9e,
-	0x44, 0x35, 0x87, 0xe8, 0x3f, 0x84, 0xf1, 0x71, 0xfb, 0x30, 0x4f, 0x4b, 0xe1, 0xe1, 0x33, 0x0c,
-	0x37, 0x42, 0x6e, 0xbf, 0xee, 0xbc, 0x31, 0x6c, 0xe7, 0x23, 0x3c, 0xbc, 0x87, 0xc1, 0x1f, 0x16,
-	0x78, 0xda, 0x74, 0xb5, 0x50, 0x1a, 0x87, 0x0d, 0x41, 0x9d, 0x5a, 0x78, 0xaf, 0x3d, 0xf7, 0xd1,
-	0xb7, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x2e, 0xaf, 0xb9, 0x6b, 0xfd, 0x01, 0x00, 0x00,
+	// 277 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x8c, 0x92, 0xc1, 0x4a, 0xc3, 0x40,
+	0x10, 0x86, 0xdb, 0x58, 0xc5, 0x4c, 0xa9, 0x98, 0xa1, 0x94, 0x20, 0x0a, 0x76, 0x2f, 0x7a, 0xca,
+	0x41, 0x9f, 0xc0, 0x04, 0x91, 0x28, 0x16, 0xc9, 0xc1, 0x7b, 0xcc, 0x0e, 0xb8, 0x98, 0xec, 0xd6,
+	0xed, 0x46, 0xcc, 0xd3, 0xf9, 0x6a, 0x92, 0x5d, 0x59, 0x8b, 0x95, 0xea, 0x6d, 0x76, 0xe6, 0xe3,
+	0xff, 0xe7, 0x1f, 0x16, 0x22, 0x21, 0x2b, 0x4d, 0x0d, 0x49, 0x23, 0x78, 0xb2, 0xd4, 0xca, 0x28,
+	0x0c, 0x7d, 0x8b, 0x9d, 0x41, 0x94, 0xcb, 0x4a, 0xe7, 0x7c, 0x51, 0x36, 0x54, 0xd0, 0x6b, 0x4b,
+	0x2b, 0x83, 0x08, 0x23, 0x59, 0x36, 0x14, 0x0f, 0x4f, 0x87, 0xe7, 0x61, 0x61, 0x6b, 0x76, 0x02,
+	0x63, 0x07, 0x16, 0xb4, 0xac, 0x3b, 0x3c, 0x80, 0x40, 0x70, 0x0b, 0x8c, 0x8a, 0x40, 0x70, 0x36,
+	0x87, 0x49, 0x3f, 0x4e, 0x95, 0xaa, 0x1d, 0x70, 0x08, 0x3b, 0x9a, 0x8c, 0x25, 0xf6, 0x8b, 0xbe,
+	0x64, 0x29, 0xcc, 0xbe, 0xad, 0x1e, 0xcb, 0xba, 0xdd, 0xe6, 0x87, 0x53, 0xd8, 0x7d, 0xeb, 0x99,
+	0x38, 0xb0, 0x1e, 0xee, 0xc1, 0xc6, 0x10, 0x2e, 0x94, 0x24, 0x6b, 0x71, 0xf1, 0x11, 0xb8, 0x9d,
+	0x6c, 0x92, 0x9c, 0x63, 0x06, 0xe1, 0x0d, 0x19, 0xe7, 0x81, 0xc7, 0x89, 0x0f, 0x99, 0x6c, 0x24,
+	0x3c, 0x9a, 0x6d, 0x4c, 0xad, 0x24, 0x1b, 0xe0, 0x03, 0x44, 0x5e, 0x24, 0xed, 0xae, 0x1a, 0xd5,
+	0x4a, 0x83, 0xf3, 0x5f, 0xc5, 0xd6, 0x33, 0x6c, 0x51, 0xbc, 0x87, 0x28, 0x7b, 0xa6, 0xea, 0xa5,
+	0xef, 0xde, 0x51, 0x77, 0xfd, 0x2e, 0x56, 0xe6, 0x8f, 0xf5, 0xe2, 0x1f, 0x53, 0x7f, 0x56, 0x36,
+	0xc0, 0x5b, 0x98, 0x64, 0x9a, 0x4a, 0x43, 0x5f, 0x7a, 0xff, 0x59, 0x6e, 0xba, 0x86, 0xf8, 0xfb,
+	0xb1, 0xc1, 0xd3, 0x9e, 0xfd, 0x0f, 0x97, 0x9f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x4a, 0x5a, 0x35,
+	0xe9, 0x24, 0x02, 0x00, 0x00,
 }
